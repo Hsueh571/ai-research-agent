@@ -49,6 +49,14 @@ async function sendMessage() {
       if (!line.startsWith("data: ")) continue;
       const data = line.slice(6);
       if (data === "[DONE]") break;
+      if (data.startsWith("[ERROR]")) {
+        assistantDiv.textContent = data.slice(8);
+        assistantDiv.style.color = "#e53e3e";
+        conversationHistory.pop(); // 移除這次失敗的 user 訊息
+        sendBtn.disabled = false;
+        inputEl.focus();
+        return;
+      }
       fullResponse += data;
       assistantDiv.textContent = fullResponse;
       messagesEl.scrollTop = messagesEl.scrollHeight;
