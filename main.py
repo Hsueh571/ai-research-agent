@@ -1,12 +1,9 @@
-import os
-from flask import Flask, request, render_template, Response, stream_with_context
 import anthropic
-from dotenv import load_dotenv
-
-load_dotenv()
+from flask import Flask, request, render_template, Response, stream_with_context
+import config
 
 app = Flask(__name__)
-client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
 
 
 @app.route("/")
@@ -21,9 +18,9 @@ def chat():
 
     def generate():
         with client.messages.stream(
-            model="claude-opus-4-6",
-            max_tokens=1024,
-            system="You are a helpful AI assistant.",
+            model=config.MODEL,
+            max_tokens=config.MAX_TOKENS,
+            system=config.SYSTEM_PROMPT,
             messages=messages,
         ) as stream:
             for text in stream.text_stream:
@@ -34,4 +31,4 @@ def chat():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(host=config.HOST, port=config.PORT, debug=config.DEBUG)
