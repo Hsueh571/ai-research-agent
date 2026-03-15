@@ -1,5 +1,6 @@
 # API Keys & Secrets
 .env
+.envrc
 
 # Virtual Environment
 venv/
