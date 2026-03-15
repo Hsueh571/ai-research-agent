@@ -1,0 +1,14 @@
+# API Keys & Secrets
+.env
+
+# Virtual Environment
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS
+.DS_Store
