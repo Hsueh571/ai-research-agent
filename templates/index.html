@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Chat</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <div id="chat-container" data-chat-url="{{ url_for('chat') }}">
+    <div id="chat-header">AI Chat</div>
+    <div id="messages"></div>
+    <div id="input-area">
+      <textarea id="user-input" placeholder="輸入訊息..." rows="1"></textarea>
+      <button id="send-btn">送出</button>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>
