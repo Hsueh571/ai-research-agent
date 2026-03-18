@@ -57,6 +57,10 @@ async function sendMessage() {
         inputEl.focus();
         return;
       }
+      if (data.startsWith("[SEARCHING]")) {
+        assistantDiv.textContent = `🔍 搜尋中：${data.slice(12)}`;
+        continue;
+      }
       fullResponse += data;
       assistantDiv.textContent = fullResponse;
       messagesEl.scrollTop = messagesEl.scrollHeight;
