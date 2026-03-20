@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 
 
-ARXIV_API_URL = "http://export.arxiv.org/api/query"
+ARXIV_API_URL = "https://export.arxiv.org/api/query"
 ARXIV_NS = "http://www.w3.org/2005/Atom"
 
 
@@ -67,7 +67,7 @@ def search(query: str, max_results: int = 5, sort_by: str = "relevance") -> list
     url = f"{ARXIV_API_URL}?{params}"
 
     ssl_ctx = ssl.create_default_context(cafile=certifi.where())
-    with urllib.request.urlopen(url, timeout=10, context=ssl_ctx) as response:
+    with urllib.request.urlopen(url, timeout=30, context=ssl_ctx) as response:
         xml_data = response.read()
 
     root = ET.fromstring(xml_data)
