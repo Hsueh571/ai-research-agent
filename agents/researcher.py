@@ -6,8 +6,15 @@ from agents import summarizer
 ARXIV_TOOL = {
     "name": "arxiv_search",
     "description": (
-        "搜尋 arXiv 學術論文資料庫。"
-        "當使用者詢問研究主題、論文、技術方法或學術概念時使用。"
+        "搜尋 arXiv 學術論文資料庫。當使用者詢問研究主題、論文、技術方法或學術概念時使用。\n\n"
+        "Query 語法指引：\n"
+        "- ti:\"keyword\" 只搜標題（最精確）\n"
+        "- abs:\"keyword\" 搜摘要\n"
+        "- 組合範例：ti:\"retrieval augmented generation\" AND cat:cs.IR\n"
+        "- 預設使用 sort_by=relevance\n"
+        "- 使用者明確要求最新論文時才用 sort_by=lastUpdatedDate，"
+        "且必須搭配 ti: 或 abs: 語法確保結果在主題內，"
+        "禁止單用關鍵字搭配 lastUpdatedDate"
     ),
     "input_schema": {
         "type": "object",

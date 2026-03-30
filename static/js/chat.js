@@ -49,7 +49,7 @@ async function sendMessage() {
 
     for (const line of lines) {
       if (!line.startsWith("data: ")) continue;
-      const data = line.slice(6);
+      const data = JSON.parse(line.slice(6));
       if (data === "[DONE]") break;
       if (data.startsWith("[ERROR]")) {
         assistantDiv.textContent = data.slice(8);
@@ -73,7 +73,7 @@ async function sendMessage() {
         continue;
       }
       fullResponse += data;
-      assistantDiv.textContent = fullResponse;
+      assistantDiv.innerHTML = marked.parse(fullResponse);
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
   }

@@ -47,11 +47,76 @@ body {
   border-radius: 12px;
   line-height: 1.5;
   font-size: 14px;
-  white-space: pre-wrap;
   word-break: break-word;
 }
 
+.message.assistant h1,
+.message.assistant h2,
+.message.assistant h3 {
+  margin: 12px 0 6px;
+  font-weight: 700;
+}
+
+.message.assistant h1 { font-size: 1.3em; }
+.message.assistant h2 { font-size: 1.15em; }
+.message.assistant h3 { font-size: 1em; }
+
+.message.assistant p {
+  margin: 6px 0;
+}
+
+.message.assistant ul,
+.message.assistant ol {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+
+.message.assistant li {
+  margin: 3px 0;
+}
+
+.message.assistant table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 8px 0;
+  font-size: 13px;
+}
+
+.message.assistant th,
+.message.assistant td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.message.assistant th {
+  background: #e8e8e8;
+  font-weight: 600;
+}
+
+.message.assistant blockquote {
+  border-left: 3px solid #ccc;
+  padding-left: 10px;
+  color: #555;
+  margin: 6px 0;
+}
+
+.message.assistant hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 10px 0;
+}
+
+.message.assistant code {
+  background: #e8e8e8;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
 .message.user {
+  white-space: pre-wrap;
   background: #1a1a1a;
   color: white;
   align-self: flex-end;
