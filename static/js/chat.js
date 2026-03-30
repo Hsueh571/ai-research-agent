@@ -21,6 +21,8 @@ async function sendMessage() {
   if (!text) return;
 
   inputEl.value = "";
+  inputEl.blur();
+  inputEl.focus();
   sendBtn.disabled = true;
 
   conversationHistory.push({ role: "user", content: text });
@@ -58,7 +60,16 @@ async function sendMessage() {
         return;
       }
       if (data.startsWith("[SEARCHING]")) {
-        assistantDiv.textContent = `🔍 搜尋中：${data.slice(12)}`;
+        assistantDiv.textContent = `🔍 搜尋：${data.slice(12)}`;
+        continue;
+      }
+      if (data.startsWith("[STATUS]")) {
+        assistantDiv.textContent = data.slice(9);
+        continue;
+      }
+      if (data === "[SUMMARIZING]") {
+        assistantDiv.textContent = "📝 整理報告中...";
+        fullResponse = "";
         continue;
       }
       fullResponse += data;
@@ -74,7 +85,7 @@ async function sendMessage() {
 
 sendBtn.addEventListener("click", sendMessage);
 inputEl.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
     e.preventDefault();
     sendMessage();
   }
