@@ -67,7 +67,7 @@ def search(query: str, max_results: int = 5, sort_by: str = "relevance") -> list
     url = f"{ARXIV_API_URL}?{params}"
 
     ssl_ctx = ssl.create_default_context(cafile=certifi.where())
-    with urllib.request.urlopen(url, timeout=60, context=ssl_ctx) as response:
+    with urllib.request.urlopen(url, timeout=30, context=ssl_ctx) as response:
         xml_data = response.read()
 
     root = ET.fromstring(xml_data)
