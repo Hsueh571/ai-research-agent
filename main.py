@@ -1,3 +1,4 @@
+import json
 import anthropic
 from flask import Flask, request, render_template, Response, stream_with_context
 import config
@@ -5,6 +6,10 @@ from agents import researcher
 
 app = Flask(__name__)
 client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
+
+
+def sse(msg: str) -> str:
+    return f"data: {json.dumps(msg, ensure_ascii=False)}\n\n"
 
 
 @app.route("/")
@@ -26,25 +31,25 @@ def chat():
                 model=config.MODEL,
                 max_tokens=config.MAX_TOKENS,
             ):
-                yield f"data: {chunk}\n\n"
+                yield sse(chunk)
         except anthropic.AuthenticationError:
-            yield "data: [ERROR] API Key 無效，請確認 .env 設定\n\n"
+            yield sse("[ERROR] API Key 無效，請確認 .env 設定")
         except anthropic.RateLimitError:
-            yield "data: [ERROR] 請求太頻繁，請稍後幾秒再試（429 Rate Limit）\n\n"
+            yield sse("[ERROR] 請求太頻繁，請稍後幾秒再試（429 Rate Limit）")
         except anthropic.APIStatusError as e:
             if e.status_code == 429:
-                yield "data: [ERROR] 請求太頻繁，請稍後幾秒再試（429 Rate Limit）\n\n"
+                yield sse("[ERROR] 請求太頻繁，請稍後幾秒再試（429 Rate Limit）")
             else:
-                yield f"data: [ERROR] API 錯誤（{e.status_code}）：{e.message}\n\n"
+                yield sse(f"[ERROR] API 錯誤（{e.status_code}）：{e.message}")
         except anthropic.BadRequestError as e:
-            yield f"data: [ERROR] {e.message}\n\n"
+            yield sse(f"[ERROR] {e.message}")
         except Exception as e:
             msg = str(e)
             if "429" in msg:
-                yield "data: [ERROR] arXiv 請求太頻繁，請稍後再試\n\n"
+                yield sse("[ERROR] arXiv 請求太頻繁，請稍後再試")
             else:
-                yield f"data: [ERROR] {msg}\n\n"
-        yield "data: [DONE]\n\n"
+                yield sse(f"[ERROR] {msg}")
+        yield sse("[DONE]")
 
     return Response(stream_with_context(generate()), mimetype="text/event-stream")
 
