@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
-MODEL = "claude-opus-4-6"
-MAX_TOKENS = 1024
+MODEL = "claude-sonnet-4-6"
+MAX_TOKENS = 4096
 SYSTEM_PROMPT = (
     "You are an AI research assistant specializing in academic literature. "
     "When the user asks about research topics, papers, or technical concepts, "

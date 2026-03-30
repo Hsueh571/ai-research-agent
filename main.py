@@ -29,10 +29,21 @@ def chat():
                 yield f"data: {chunk}\n\n"
         except anthropic.AuthenticationError:
             yield "data: [ERROR] API Key 無效，請確認 .env 設定\n\n"
+        except anthropic.RateLimitError:
+            yield "data: [ERROR] 請求太頻繁，請稍後幾秒再試（429 Rate Limit）\n\n"
+        except anthropic.APIStatusError as e:
+            if e.status_code == 429:
+                yield "data: [ERROR] 請求太頻繁，請稍後幾秒再試（429 Rate Limit）\n\n"
+            else:
+                yield f"data: [ERROR] API 錯誤（{e.status_code}）：{e.message}\n\n"
         except anthropic.BadRequestError as e:
             yield f"data: [ERROR] {e.message}\n\n"
         except Exception as e:
-            yield f"data: [ERROR] {str(e)}\n\n"
+            msg = str(e)
+            if "429" in msg:
+                yield "data: [ERROR] arXiv 請求太頻繁，請稍後再試\n\n"
+            else:
+                yield f"data: [ERROR] {msg}\n\n"
         yield "data: [DONE]\n\n"
 
     return Response(stream_with_context(generate()), mimetype="text/event-stream")
