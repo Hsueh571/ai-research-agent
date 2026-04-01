@@ -1,16 +1,23 @@
-# My First LLM Project
+# AI Research Agent
 
-A simple chat application that lets you have a conversation with OpenAI's language model from your terminal.
+A web-based research assistant powered by Claude. Ask research questions and get structured reports — the agent automatically searches arXiv for academic papers or the web for general information, then summarizes findings with citations.
+
+---
+
+## Features
+
+- **Dual search tools** — arXiv for academic papers, DuckDuckGo for general web results
+- **Agentic loop** — Claude decides which tool to use based on your question
+- **Structured reports** — Overview, Key Papers, Common Themes, Conclusion
+- **Streaming UI** — real-time status updates and markdown rendering
+- **Retry logic** — handles rate limits from both Anthropic and arXiv APIs
 
 ---
 
 ## Prerequisites
 
-Make sure you have the following installed before getting started:
-
-- [Python 3.8+](https://www.python.org/downloads/)
-- [Git](https://git-scm.com/downloads)
-- An [OpenAI API key](https://platform.openai.com/api-keys)
+- Python 3.10+
+- An [Anthropic API key](https://console.anthropic.com/)
 
 ---
 
@@ -19,39 +26,37 @@ Make sure you have the following installed before getting started:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-cd YOUR_REPO_NAME
+git clone https://github.com/Hsueh571/ai-research-agent.git
+cd ai-research-agent
 ```
 
-### 2. Create a virtual environment (recommended)
+### 2. Create a virtual environment
 
 ```bash
-python -m venv venv
-source venv/bin/activate        # On macOS/Linux
-venv\Scripts\activate           # On Windows
+python3 -m venv venv
+source venv/bin/activate        # macOS/Linux
+venv\Scripts\activate           # Windows
 ```
 
 ### 3. Install dependencies
 
 ```bash
-pip install openai
+pip install -r requirements.txt
 ```
 
-### 4. Add your OpenAI API key
-
-Create a file named `.env` in the project root:
+### 4. Add your Anthropic API key
 
 ```bash
 touch .env
 ```
 
-Open `.env` and add your API key:
+Open `.env` and add:
 
 ```
-OPENAI_API_KEY=your-api-key-here
+ANTHROPIC_API_KEY=your-api-key-here
 ```
 
-> **Note:** Never share your `.env` file or commit it to GitHub. The `.gitignore` should already exclude it.
+> Never commit `.env` to git — it's already in `.gitignore`.
 
 ### 5. Run the app
 
@@ -59,20 +64,17 @@ OPENAI_API_KEY=your-api-key-here
 python main.py
 ```
 
-You should see a prompt in your terminal. Start chatting!
+Open your browser at `http://127.0.0.1:8000`.
 
 ---
 
 ## Usage
 
-```
-You: Hello, who are you?
-AI: I'm an AI assistant powered by OpenAI. How can I help you today?
+Type any research question in the chat box:
 
-You: quit
-```
-
-Type `quit` or `exit` to end the conversation.
+- **Academic questions** → agent searches arXiv and returns a structured paper summary
+- **General questions** → agent searches the web and summarizes results
+- **Non-research questions** → agent answers directly without searching
 
 ---
 
@@ -80,30 +82,36 @@ Type `quit` or `exit` to end the conversation.
 
 ```
 .
-├── main.py          # Entry point — starts the chat loop
+├── main.py               # Flask server, SSE streaming endpoint
+├── config.py             # API key, model, and prompt configuration
 ├── agents/
-│   ├── planner.py   # Planning agent
-│   ├── researcher.py
-│   └── summarizer.py
-├── rag/
-│   ├── embedding.py
-│   └── vector_store.py
+│   ├── researcher.py     # Orchestration agent — decides which tools to use
+│   └── summarizer.py     # Generates structured reports from search results
 ├── tools/
-│   ├── arxiv_search.py
-│   └── web_search.py
-├── .env             # Your API key (not committed to git)
-└── README.md
+│   ├── arxiv_search.py   # arXiv API client
+│   └── web_search.py     # DuckDuckGo web search
+├── rag/                  # Planned: embeddings and vector store
+├── templates/
+│   └── index.html        # Chat UI
+├── static/
+│   ├── css/style.css
+│   └── js/chat.js
+├── requirements.txt
+└── .env                  # API key (not committed)
 ```
 
 ---
 
 ## Troubleshooting
 
-**`ModuleNotFoundError: No module named 'openai'`**
-Run `pip install openai` and make sure your virtual environment is activated.
+**`ModuleNotFoundError`**
+Make sure your virtual environment is activated and run `pip install -r requirements.txt`.
 
-**`AuthenticationError`**
-Double-check that your API key in `.env` is correct and has not expired.
+**`429 Rate Limit`**
+The agent has built-in retry logic, but new Anthropic accounts start at Tier 1 (50 RPM). Wait a few seconds and try again, or upgrade your tier at [console.anthropic.com](https://console.anthropic.com/).
+
+**`SSL certificate verify failed`**
+Run `pip install certifi` and ensure your Python installation is up to date.
 
 **`python` command not found**
-Try using `python3` instead of `python`.
+Try `python3` instead of `python`.
